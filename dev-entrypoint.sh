@@ -24,8 +24,8 @@ rm -rf migrations;
 mkdir -p migrations;
 
 # Create the database and run the migrations
-# php bin/console make:migration;
-# php bin/console doctrine:migrations:migrate;
+php bin/console make:migration;
+php bin/console doctrine:migrations:migrate;
 
 # Build the assets and start the server
 # exec apache2-foreground &
