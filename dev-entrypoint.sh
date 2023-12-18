@@ -3,8 +3,8 @@
 
 # Set the permissions
 chmod 777 . -R;
-cp .env ./app
-cd ./app
+cp .env ./app2
+cd ./app2
 
 # Install the app dependencies 
 composer install;
