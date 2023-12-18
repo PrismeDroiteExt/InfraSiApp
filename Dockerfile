@@ -1,6 +1,5 @@
 FROM php:8.2-apache-bookworm
 
-# ENV http_proxy='http://10.0.0.1:80'
 COPY php.ini /usr/local/etc/php/php.ini
 RUN a2enmod rewrite \
   && service apache2 restart
@@ -19,7 +18,7 @@ RUN git config --global --add safe.directory /var/www
 
 # set default vhost to target /symfony/app/public
 WORKDIR /var/www
-RUN sed -i -e "s/\/var\/www\/html/\/var\/www\/public/g" /etc/apache2/sites-available/000-default.conf
+RUN sed -i -e "s/\/var\/www\/html/\/var\/www\/app\/public/g" /etc/apache2/sites-available/000-default.conf
 
 # install nodejs 
 RUN mkdir -p /etc/apt/keyrings
