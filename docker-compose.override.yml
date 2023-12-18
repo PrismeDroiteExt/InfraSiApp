@@ -6,6 +6,7 @@ services:
     entrypoint: "./dev-entrypoint.sh"
     volumes:
       - ./:/var/www
+
     ports:
       - "80:80"
       - "443:443"

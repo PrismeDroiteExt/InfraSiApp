@@ -17,9 +17,10 @@ RUN git config --global user.name "Florian Dkhissi"
 RUN git config --global --add safe.directory /var/www
 
 # set default vhost to target /symfony/app/public
+RUN mkdir -p /var/www/app
 WORKDIR /var/www
-RUN sed -i -e "s/\/var\/www\/html/\/var\/www\/app2\/public/g" /etc/apache2/sites-available/000-default.conf
-# COPY [.env  /var/www/app2]
+RUN sed -i -e "s/\/var\/www\/html/\/var\/www\/app\/public/g" /etc/apache2/sites-available/000-default.conf
+COPY .env /var/www/app/.env
 
 # install nodejs 
 RUN mkdir -p /etc/apt/keyrings
