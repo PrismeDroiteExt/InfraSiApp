@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  web:
+    build: ./docker/dockerfile/
+    restart: unless-stopped 
+    entrypoint: "./${APP_CONTEXT}-entrypoint.sh"
+    volumes:
+      - ./:/var/www
+    ports:
+      - "80:80"
+    depends_on:
+      - database
+#    labels:
+#      - traefik.enable=true
+#      - traefik.http.routers.webinfasi.rule=PathPrefix(`/infrasi`)
+#      - traefik.http.routers.webinfasi.middlewares=strip-webinfasi-prefix
+#      - traefik.http.middlewares.strip-webinfasi-prefix.stripprefix.prefixes=/infrasi
+#      - traefik.http.routers.webinfasi.entrypoints=web
+    networks:
+      vpcbr:
+        ipv4_address: 172.21.0.4
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+          gateway: 172.21.0.1

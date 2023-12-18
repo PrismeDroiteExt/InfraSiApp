@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  database:
+    image: mariadb:latest
+    restart: unless-stopped
+#    labels:
+#      - "traefik.enable=true"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./database_data:/var/lib/mysql
+    ports:
+      - "3306"
+    networks:
+      vpcbr:
+        ipv4_address: 172.21.0.2
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+  #  labels:
+  #    - "traefik.enable=true"
+  #    - "traefik.http.routers.phpmyadmin.rule=PathPrefix(`/pma`)"
+  #    - "traefik.http.routers.phpmyadmin.middlewares=strip-phpmyadmin-prefix"
+  #    - "traefik.http.middlewares.strip-phpmyadmin-prefix.stripPrefix.prefixes=/pma"
+  #    - "traefik.http.routers.phpmyadmin.entrypoints=web"
+    environment:
+      PMA_HOST: database
+      PMA_ABSOLUTE_URI: http://${HOSTNAME}/pma/
+    volumes:
+      - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    networks:
+      vpcbr:
+        ipv4_address: 172.21.0.3
+    depends_on:
+      - database
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+          gateway: 172.21.0.1

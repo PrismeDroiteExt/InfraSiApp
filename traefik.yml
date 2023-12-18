@@ -1,0 +1,19 @@
+## traefik.yml
+
+# Docker configuration backend
+providers:
+  docker:
+    exposedByDefault: false
+    # exposedByDefault: true
+
+    network: vpcbr
+
+# API and dashboard configuration
+api:
+  insecure: true
+  dashboard: true
+
+#Entrypoint configuration
+entryPoints:
+  web:
+    address: ":80"
