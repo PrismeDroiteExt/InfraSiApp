@@ -3,7 +3,7 @@ services:
   web:
     build: .
     restart: unless-stopped 
-    entrypoint: "./dev-entrypoint.sh"
+    # entrypoint: "./dev-entrypoint.sh"
     volumes:
       - ./:/var/www
 

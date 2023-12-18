@@ -1,12 +1,10 @@
 .env
 /database_data
 
-/app/vendor
-/app/node_modules
+/vendor
+/node_modules
 
-/app/var
-
-/app2
+/var
 
 /node_modules
 
