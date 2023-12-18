@@ -1,13 +1,14 @@
 version: '3.8'
 services:
   web:
-    build: ./docker/dockerfile/
+    build: .
     restart: unless-stopped 
-    entrypoint: "./${APP_CONTEXT}-entrypoint.sh"
+    # entrypoint: "./${APP_CONTEXT}-entrypoint.sh"
     volumes:
       - ./:/var/www
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - database
 #    labels:
