@@ -60,6 +60,3 @@ EOL
 
 
 echo ".env file created successfully!"
-
-
-fi
