@@ -1,7 +1,9 @@
 version: '3.8'
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: web-dockerfile
     restart: unless-stopped 
     entrypoint: "./dev-entrypoint.sh"
     volumes:
@@ -10,7 +12,7 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - database
+      - mariadb-master
 #    labels:
 #      - traefik.enable=true
 #      - traefik.http.routers.webinfasi.rule=PathPrefix(`/infrasi`)

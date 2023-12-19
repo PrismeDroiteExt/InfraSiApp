@@ -3,6 +3,8 @@
 
 # Set the permissions
 chmod 777 . -R;
+chmod 644 slave.cnf
+chmod 644 master.cnf
 
 # Install the app dependencies 
 composer install;

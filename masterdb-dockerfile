@@ -1,0 +1,15 @@
+FROM mariadb:latest
+
+# Copy your custom configuration file
+COPY master.cnf /etc/mysql/conf.d/master.cnf
+RUN chmod 644 /etc/mysql/conf.d/master.cnf
+
+# # # Copy the entrypoint script into the container
+# COPY master-mdb-entrypoint.sh /usr/local/bin/master-mdb-entrypoint.sh
+# RUN chmod +x /usr/local/bin/master-mdb-entrypoint.sh
+
+# # Set the entrypoint script to be executed
+# ENTRYPOINT ["/usr/local/bin/master-mdb-entrypoint.sh"]
+
+# By default, run MariaDB server
+CMD ["mariadbd"]

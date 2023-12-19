@@ -1,45 +1,62 @@
 version: '3.8'
 services:
-  database:
-    image: mariadb:latest
-    restart: unless-stopped
-#    labels:
-#      - "traefik.enable=true"
+
+  mariadb-master:
+    build:
+      context: .
+      dockerfile: masterdb-dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - ./database_data:/var/lib/mysql
-    ports:
-      - "3306"
+      - ./master_data:/var/lib/mysql
+      - ./master.cnf:/etc/mysql/conf.d/master.cnf
+      - ./master-mdb-entrypoint.sh:/bin/local/bin/master-mdb-entrypoint.sh
+    command: ["./usr/local/bin/master-mdb-entrypoint.sh"]
     networks:
       vpcbr:
         ipv4_address: 172.21.0.2
+    # Additional master configuration goes here
+
+  mariadb-slave:
+    build:
+      context: .
+      dockerfile: slavedb-dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_SLAVE_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_SLAVE_USER}
+      MYSQL_PASSWORD: ${MYSQL_SLAVE_PASSWORD}
+    volumes:
+      - ./slave_data:/var/lib/mysql
+      - ./slave.cnf:/etc/mysql/conf.d/slave.cnf
+      - ./slave-mdb-entrypoint.sh:/bin/local/bin/slave-mdb-entrypoint.sh
+    command: ["./usr/local/bin/slave-mdb-entrypoint.sh"]
+    networks:
+      vpcbr:
+        ipv4_address: 172.21.0.5
+    # Additional slave configuration goes here
+    links:
+      - mariadb-master:mariadb-master
+    depends_on:
+      - mariadb-master
+      
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: unless-stopped
-  #  labels:
-  #    - "traefik.enable=true"
-  #    - "traefik.http.routers.phpmyadmin.rule=PathPrefix(`/pma`)"
-  #    - "traefik.http.routers.phpmyadmin.middlewares=strip-phpmyadmin-prefix"
-  #    - "traefik.http.middlewares.strip-phpmyadmin-prefix.stripPrefix.prefixes=/pma"
-  #    - "traefik.http.routers.phpmyadmin.entrypoints=web"
     environment:
-      PMA_HOST: database
+      PMA_HOST: mariadb-master
       PMA_PASSWORD: ${MYSQL_PASSWORD}
       PMA_USER: ${MYSQL_USER}
-      # PMA_ABSOLUTE_URI: http://${HOSTNAME}/pma/
-    # volumes:
-    #   - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
     ports: 
     - "8080:80"
     networks:
       vpcbr:
         ipv4_address: 172.21.0.3
     depends_on:
-      - database
+      - mariadb-master
+      - mariadb-slave
 
 networks:
   vpcbr:
