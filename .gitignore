@@ -1,5 +1,7 @@
 .env
-/database_data
+
+/master_data
+/slaves_data
 
 /vendor
 /node_modules
